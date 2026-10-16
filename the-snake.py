@@ -1,11 +1,10 @@
 import random
 import pygame
 
-# <--- ВОТ ЭТА ПУСТАЯ СТРОКА ОБЯЗАТЕЛЬНА. Без неё будет ошибка I003.
-
 GRID_SIZE = 20
 FIELD_SIZE = (600, 480)
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
+
 
 class GameObject:
     """Базовый класс для всех игровых объектов."""
