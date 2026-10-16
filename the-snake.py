@@ -1,5 +1,12 @@
 import random
-import pygame  # Обязательно импортируем pygame для отрисовки
+import pygame
+
+# Одна пустая строка обязательна!
+
+# --- ГЛОБАЛЬНЫЕ КОНСТАНТЫ (теперь их видят все функции!) ---
+GRID_SIZE = 20
+FIELD_SIZE = (600, 480)
+BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
 
 class GameObject:
@@ -118,12 +125,31 @@ class Snake(GameObject):
             )
 
 
+def handle_events(snake):
+    """Обрабатывает события (закрытие окна и нажатия клавиш)."""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            return False  # Возвращаем False, чтобы выйти из цикла игры
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                snake.next_direction = (0, -GRID_SIZE)
+            elif event.key == pygame.K_DOWN:
+                snake.next_direction = (0, GRID_SIZE)
+            elif event.key == pygame.K_LEFT:
+                snake.next_direction = (-GRID_SIZE, 0)
+            elif event.key == pygame.K_RIGHT:
+                snake.next_direction = (GRID_SIZE, 0)
+
+    return True  # Если окно не закрыли, продолжаем игру
+
+
 def main():
-    """Вычисляет случайные координаты для яблока."""
+    """Основная функция игры."""
     # --- НАСТРОЙКИ ---
-    GRID_SIZE = 20              # Размер одной клетки
-    FIELD_SIZE = (600, 480)     # Размер окна (ширина, высота)
-    BOARD_BACKGROUND_COLOR = (0, 0, 0)  # Чёрный цвет фона
+    GRID_SIZE = 20
+    FIELD_SIZE = (600, 480)
+    BOARD_BACKGROUND_COLOR = (0, 0, 0)
 
     # --- ЗАПУСК PYGAME ---
     pygame.init()
@@ -135,61 +161,41 @@ def main():
     snake = Snake(FIELD_SIZE, GRID_SIZE)
     apple = Apple(FIELD_SIZE, GRID_SIZE)
 
-    # Пока оставим цикл пустым, чтобы проверить, что окно открывается
     running = True
     while running:
-        # 1. Обработка событий (нажатия клавиш, закрытие окна)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        # 1. Обработка событий (ВЫНЕСЕНА В ОТДЕЛЬНУЮ ФУНКЦИЮ)
+        # Если функция вернет False (нажали крестик), цикл остановится
+        running = handle_events(snake)
 
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    snake.next_direction = (0, -GRID_SIZE)
-                elif event.key == pygame.K_DOWN:
-                    snake.next_direction = (0, GRID_SIZE)
-                elif event.key == pygame.K_LEFT:
-                    snake.next_direction = (-GRID_SIZE, 0)
-                elif event.key == pygame.K_RIGHT:
-                    snake.next_direction = (GRID_SIZE, 0)
-                # 2. Обновление логики игры
+        # Если игра остановлена (крестик), прерываем цикл сразу
+        if not running:
+            break
 
-        # Применяем проверку, не разворачиваемся ли мы на 180 градусов
+        # 2. Логика игры (движение, столкновения, еда)
+        # Применяем направление
         snake.update_direction()
 
-        # Двигаем змейку на один шаг
+        # Двигаем змейку
         snake.move(FIELD_SIZE, GRID_SIZE)
 
         # Проверка: съела ли змейка яблоко?
-        # Сравниваем координаты головы змейки и текущего положения яблока
         if snake.get_head_position() == apple.position:
-            snake.length += 1  # Увеличиваем длину змейки
-            apple.randomize_position(GRID_SIZE, FIELD_SIZE)  # новое яблоко
+            snake.length += 1
+            apple.randomize_position(GRID_SIZE, FIELD_SIZE)
 
         # Проверка: столкнулась ли змейка сама с собой?
-        # Голова не должна совпадать ни с одним другим сегментом тела
         head = snake.get_head_position()
         if head in snake.positions[1:]:
-            # Если врезалась в себя — сбрасываем игру
-            # Создаем новых змею и яблоко с начальными параметрами
+            # Сброс игры
             snake = Snake(FIELD_SIZE, GRID_SIZE)
             apple = Apple(FIELD_SIZE, GRID_SIZE)
 
-        # стираем всё, что было нарисовано в прошлом кадре)
+        # 3. Отрисовка
         screen.fill(BOARD_BACKGROUND_COLOR)
-
-        # Рисуем яблоко
         apple.draw(screen, GRID_SIZE)
-
-        # Рисуем змейку (она сама сотрёт старый хвост и нарисует новое тело)
         snake.draw(screen, GRID_SIZE, BOARD_BACKGROUND_COLOR)
 
-        # Обновляем экран: показываем то, что мы только что нарисовали
         pygame.display.flip()
-
-        # Устанавливаем скорость игры (10 кадров в секунду)
         clock.tick(10)
 
-
-if __name__ == '__main__':
-    main()
+    pygame.quit()
