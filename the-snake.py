@@ -1,5 +1,4 @@
 import pygame
-
 import random
 
 GRID_SIZE = 20
@@ -57,27 +56,22 @@ class Snake(GameObject):
     def __init__(self, field_size, grid_size):
         """Инициализирует змейку в центре поля."""
         super().__init__(field_size)
-
+        self.grid_size = grid_size
         self.body_color = (0, 255, 0)
         self.length = 1
         self.positions = [self.position]
-
-        # Начальное направление: вправо
         self.direction = (grid_size, 0)
-
         self.next_direction = None
         self.last = None
 
     def update_direction(self):
         """Применяет новое направление, запрещая разворот на 180 градусов."""
         if self.next_direction is not None:
-            # ИСПРАВЛЕНО: условие в скобках, 'and' в начале новой строки
             if (
                 self.direction[0] + self.next_direction[0] != 0
                 and self.direction[1] + self.next_direction[1] != 0
             ):
                 self.direction = self.next_direction
-
             self.next_direction = None
 
     def get_head_position(self):
@@ -127,7 +121,7 @@ def handle_events(snake):
     """Обрабатывает события (закрытие окна и нажатия клавиш)."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            return False  # Возвращаем False, чтобы выйти из цикла игры
+            return False
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
@@ -139,41 +133,29 @@ def handle_events(snake):
             elif event.key == pygame.K_RIGHT:
                 snake.next_direction = (GRID_SIZE, 0)
 
-    return True  # Если окно не закрыли, продолжаем игру
+    return True
 
 
 def main():
     """Основная функция игры."""
-    # --- НАСТРОЙКИ ---
-    GRID_SIZE = 20
-    FIELD_SIZE = (600, 480)
-    BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
-    # --- ЗАПУСК PYGAME ---
     pygame.init()
     screen = pygame.display.set_mode(FIELD_SIZE)
     pygame.display.set_caption('Изгиб Питона')
     clock = pygame.time.Clock()
 
-    # --- СОЗДАНИЕ ОБЪЕКТОВ ---
     snake = Snake(FIELD_SIZE, GRID_SIZE)
     apple = Apple(FIELD_SIZE, GRID_SIZE)
 
     running = True
     while running:
-        # 1. Обработка событий (ВЫНЕСЕНА В ОТДЕЛЬНУЮ ФУНКЦИЮ)
-        # Если функция вернет False (нажали крестик), цикл остановится
+        # 1. Обработка событий
         running = handle_events(snake)
 
-        # Если игра остановлена (крестик), прерываем цикл сразу
         if not running:
             break
 
-        # 2. Логика игры (движение, столкновения, еда)
-        # Применяем направление
+        # 2. Логика игры
         snake.update_direction()
-
-        # Двигаем змейку
         snake.move(FIELD_SIZE, GRID_SIZE)
 
         # Проверка: съела ли змейка яблоко?
@@ -197,3 +179,7 @@ def main():
         clock.tick(10)
 
     pygame.quit()
+
+
+if __name__ == '__main__':
+    main()
