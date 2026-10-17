@@ -17,7 +17,7 @@ DOWN = (0, GRID_HEIGHT)
 LEFT = (-GRID_WIDTH, 0)
 RIGHT = (GRID_WIDTH, 0)
 
-# Глобальные переменные (нужны для тестов)
+# Глобальные переменные (нужны для автотестов)
 screen = None
 clock = None
 
