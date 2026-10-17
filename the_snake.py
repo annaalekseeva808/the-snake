@@ -16,6 +16,7 @@ UP = (0, -GRID_HEIGHT)
 DOWN = (0, GRID_HEIGHT)
 LEFT = (-GRID_WIDTH, 0)
 RIGHT = (GRID_WIDTH, 0)
+SPEED = 10
 
 # Глобальные переменные (нужны для автотестов)
 screen = None
@@ -163,6 +164,7 @@ def main():
 
     running = True
     while running:
+        clock.tick(SPEED)
         # 1. Обработка событий
         running = handle_keys(snake)
 
