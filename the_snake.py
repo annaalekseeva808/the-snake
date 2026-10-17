@@ -11,8 +11,6 @@ UP = (0, -GRID_HEIGHT)
 DOWN = (0, GRID_HEIGHT)
 LEFT = (-GRID_WIDTH, 0)
 RIGHT = (GRID_WIDTH, 0)
-screen = None
-clock = None
 GRID_SIZE = 20
 FIELD_SIZE = (600, 480)
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
@@ -129,7 +127,7 @@ class Snake(GameObject):
             )
 
 
-def handle_events(snake):
+def handle_keys(snake):
     """Обрабатывает события (закрытие окна и нажатия клавиш)."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -161,7 +159,7 @@ def main():
     running = True
     while running:
         # 1. Обработка событий
-        running = handle_events(snake)
+        running = handle_keys(snake)
 
         if not running:
             break
