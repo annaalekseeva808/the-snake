@@ -1,6 +1,6 @@
-import pygame
-
 import random
+
+import pygame
 
 # --- КОНСТАНТЫ ---
 GRID_SIZE = 20
