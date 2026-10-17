@@ -2,6 +2,17 @@ import random
 
 import pygame
 
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 480
+GRID_WIDTH = 20
+GRID_HEIGHT = 20
+
+UP = (0, -GRID_HEIGHT)
+DOWN = (0, GRID_HEIGHT)
+LEFT = (-GRID_WIDTH, 0)
+RIGHT = (GRID_WIDTH, 0)
+screen = None
+clock = None
 GRID_SIZE = 20
 FIELD_SIZE = (600, 480)
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
@@ -10,7 +21,7 @@ BOARD_BACKGROUND_COLOR = (0, 0, 0)
 class GameObject:
     """Базовый класс для всех игровых объектов."""
 
-    def __init__(self, field_size):
+    def __init__(self, field_size=(600, 480)):
         width, height = field_size
         self.position = (width // 2, height // 2)
         self.body_color = (255, 255, 255)
@@ -23,10 +34,8 @@ class GameObject:
 class Apple(GameObject):
     """Класс яблока."""
 
-    def __init__(self, field_size, grid_size):
+    def __init__(self, field_size=(600, 480), grid_size=20):
         super().__init__(field_size)
-        self.body_color = (255, 0, 0)
-        self.randomize_position(grid_size, field_size)
 
     def randomize_position(self, grid_size, field_size):
         """Вычисляет случайные координаты для яблока."""
@@ -62,6 +71,8 @@ class Snake(GameObject):
         self.length = 1
         self.positions = [self.position]
         self.direction = (grid_size, 0)
+
+        # 👇 ЭТА СТРОКА ОБЯЗАТЕЛЬНА, иначе будет ошибка, которую ты видишь
         self.next_direction = None
         self.last = None
 
