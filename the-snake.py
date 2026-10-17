@@ -1,5 +1,5 @@
-import pygame
 import random
+import pygame
 
 GRID_SIZE = 20
 FIELD_SIZE = (600, 480)
